@@ -1,16 +1,17 @@
-// Источник: https://habr.com/ru/post/312880/
-function getRandomInteger (min, max) {
+// Источник: https://learn.javascript.ru/task/random-int-min-max
+const getRandomInteger = (min, max) => {
   if (max > min && min >= 0) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+    return Math.floor(Math.random() * (max - min + 1) + min);
   }
-  return -1;
-}
-getRandomInteger (1, 3);
+  throw new Error('Invalid argument: value min cannot be less than zero, value max must be greater than value min.');
+};
+getRandomInteger (1, 0);
 
-function getRandomFP (min, max, demicalPlaces) {
+// Источник: https://habr.com/ru/post/312880/
+const getRandomFloat = (min, max, decimalPlaces) => {
   if (max > min && min >= 0) {
-    return (Math.random() * (max - min) + min).toFixed(demicalPlaces);
+    return parseFloat((Math.random() * (max - min) + min).toFixed(decimalPlaces));
   }
-  return -1;
-}
-getRandomFP (1, 2, 2);
+  throw new Error('Invalid argument: value min cannot be less than zero, value max must be greater than value min.');
+};
+getRandomFloat (1, 5, 3);
