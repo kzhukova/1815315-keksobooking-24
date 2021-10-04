@@ -116,3 +116,4 @@ const createAdvert = () => {
 };
 
 const similarAdverts = Array.from({length: SIMILAR_ADVERT_COUNT}, createAdvert);
+console.log(similarAdverts); //eslint-disable-line no-console
