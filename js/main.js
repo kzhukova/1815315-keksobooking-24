@@ -91,7 +91,7 @@ const getRandomSubarray = (elements) => {
 
 const createAdvert = () => {
   const location = getRandomLocation();
-  const author = {AVATAR: getRandomAvatarURL()};
+  const author = {avatar: getRandomAvatarURL()};
   const offer = {
     title: getRandomArrayElement(TITLES),
     address: `${location.lat}, ${location.lng}`,
@@ -112,10 +112,10 @@ const createAdvert = () => {
   };
 };
 
-const createRandomAdvert = () => {
+const createRandomAdverts = () => {
   Array.from({length: SIMILAR_ADVERT_COUNT}, createAdvert);
 };
 
-const similarAdverts = createRandomAdvert();
+const similarAdverts = createRandomAdverts();
 
 console.log(similarAdverts); //eslint-disable-line no-console
