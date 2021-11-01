@@ -1,5 +1,6 @@
-// import {createRandomAdverts} from './mock.js';
-import './template.js';
+import {createRandomAdverts} from './mock.js';
+import {renderMap} from './map.js';
 
-// const similarAdverts = createRandomAdverts();
-// console.log(similarAdverts); //eslint-disable-line no-console
+const similarAdverts = createRandomAdverts();
+renderMap(similarAdverts);
+
