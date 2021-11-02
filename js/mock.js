@@ -77,7 +77,8 @@ const createAdvert = () => {
 };
 
 const createRandomAdverts = () => {
-  Array.from({length: SIMILAR_ADVERT_COUNT}, createAdvert);
+  const result = Array.from({length: SIMILAR_ADVERT_COUNT}, createAdvert);
+  return result;
 };
 
 export {createRandomAdverts};

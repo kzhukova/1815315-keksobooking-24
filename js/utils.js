@@ -15,7 +15,8 @@ const getRandomFloat = (min, max, decimalPlaces) => {
 };
 
 const getRandomArrayElement = (elements) => {
-  elements[getRandomInteger(0, elements.length - 1)];
+  const result = elements[getRandomInteger(0, elements.length - 1)];
+  return result;
 };
 
 const getRandomSubarray = (elements) => {
