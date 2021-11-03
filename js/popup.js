@@ -1,3 +1,5 @@
+const mapCanvasElement = document.querySelector('#map-canvas');
+
 const ACCOMMODATION_TYPES = {
   flat: 'Квартира',
   bungalow: 'Бунгало',
@@ -15,12 +17,11 @@ const addOrDisable = (element, text) => {
 };
 
 const renderMap = (advert) => {
-  const similarListElement = document.querySelector('#map-canvas');
-  const similarAdvertTemplate = document.querySelector('#card')
+  const cardTemplate = document.querySelector('#card')
     .content
     .querySelector('.popup');
   const similarListFragment = document.createDocumentFragment();
-  const advertElement = similarAdvertTemplate.cloneNode(true);
+  const advertElement = cardTemplate.cloneNode(true);
   addOrDisable(advertElement.querySelector('.popup__title'),
     advert.offer.title);
   addOrDisable(advertElement.querySelector('.popup__text--address'),
@@ -61,7 +62,7 @@ const renderMap = (advert) => {
   popupPhotos.removeChild(photoElements[0]);
   advertElement.querySelector('.popup__avatar').setAttribute('src', advert.author.avatar);
   similarListFragment.appendChild(advertElement);
-  similarListElement.appendChild(similarListFragment);
+  mapCanvasElement.appendChild(similarListFragment);
 };
 
 export {renderMap};
