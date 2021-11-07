@@ -13,49 +13,52 @@ const TYPE_TO_MIN_VALUE = {
   'palace': '10000',
 };
 
+const CAPACITY_ELLEMENT = document.querySelector('#capacity');
+const ROOM_NUMBER_ELLEMENT = document.querySelector('#room_number');
+const TYPE_ELLEMENT = document.querySelector('#type');
+const PRICE_ELLEMENT = document.querySelector('#price');
+const TIMEOUT_ELLEMENT = document.querySelector('#timeout');
+const TIMEIN_ELLEMENT = document.querySelector('#timein');
+
 const capacityValidator = () => {
-  const capacityElement = document.querySelector('#capacity');
-  const selectedCapacity = capacityElement.value;
-  const selectedRoomNumber = document.querySelector('#room_number').value;
+  const selectedCapacity = CAPACITY_ELLEMENT.value;
+  const selectedRoomNumber = ROOM_NUMBER_ELLEMENT.value;
   const allowedCapacityList = ROOMS_TO_CAPACITY[selectedRoomNumber];
   if (allowedCapacityList.includes(selectedCapacity)) {
-    capacityElement.setCustomValidity('');
+    CAPACITY_ELLEMENT.setCustomValidity('');
   } else {
-    capacityElement.setCustomValidity('Количество гостей недопустимо для выбранного количества комнат');
+    CAPACITY_ELLEMENT.setCustomValidity('Количество гостей недопустимо для выбранного количества комнат');
   }
 };
 
-
 const minPriceValidator = () => {
-  const selectedType = document.querySelector('#type').value;
+  const selectedType = TYPE_ELLEMENT.value;
   const minPrice = TYPE_TO_MIN_VALUE[selectedType];
-  const priceElement = document.querySelector('#price');
-  priceElement.setAttribute('placeholder', minPrice);
-  priceElement.setAttribute('min', minPrice);
+  PRICE_ELLEMENT.setAttribute('placeholder', minPrice);
+  PRICE_ELLEMENT.setAttribute('min', minPrice);
 };
 
 const syncTimeInOut = () => {
-  document.querySelector('#timeout').value = document.querySelector('#timein').value;
+  TIMEOUT_ELLEMENT.value = TIMEIN_ELLEMENT.value;
 };
 
 const updateTimeInOut = (evt) => {
   if (evt.target.matches('select[id="timein"]')) {
-    document.querySelector('#timeout').value = evt.target.value;
+    TIMEOUT_ELLEMENT.value = evt.target.value;
   }
   if (evt.target.matches('select[id="timeout"]')) {
-    document.querySelector('#timein').value = evt.target.value;
+    TIMEIN_ELLEMENT.value = evt.target.value;
   }
 };
 
 const addListenersToForm = () => {
+  CAPACITY_ELLEMENT.addEventListener('change', capacityValidator);
   document.addEventListener('DOMContentLoaded', capacityValidator);
+  TYPE_ELLEMENT.addEventListener('change', minPriceValidator);
   document.addEventListener('DOMContentLoaded', minPriceValidator);
+  TIMEOUT_ELLEMENT.addEventListener('change', updateTimeInOut);
+  TIMEIN_ELLEMENT.addEventListener('change', updateTimeInOut);
   document.addEventListener('DOMContentLoaded', syncTimeInOut);
-  document.querySelector('#capacity').addEventListener('change', capacityValidator);
-  document.querySelector('#type').addEventListener('change', minPriceValidator);
-  document.querySelector('#timeout').addEventListener('change', updateTimeInOut);
-  document.querySelector('#timein').addEventListener('change', updateTimeInOut);
-
 };
 
 export {addListenersToForm};
