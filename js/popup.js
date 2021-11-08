@@ -6,13 +6,13 @@ const ACCOMMODATION_TYPES = {
   hotel: 'Отель',
 };
 
-function addOrDisableText(element, data) {
+const addOrDisableText = (element, data) => {
   if (data){
     element.textContent = data;
   } else {
     element.hidden = true;
   }
-}
+};
 
 const createPopup = (advert) => {
   const popupElement = document
@@ -22,9 +22,9 @@ const createPopup = (advert) => {
     .cloneNode(true);
 
   if (advert.author.avatar) {
-    popupElement.querySelector('.popup__avatar').setAttribute('src', advert.author.avatar);
+    popupElement.querySelector('.popup__avatar').src = advert.author.avatar;
   } else {
-    popupElement.querySelector('.popup__avatar').setAttribute('hidden', true);
+    popupElement.querySelector('.popup__avatar').hidden = true;
   }
 
   addOrDisableText(popupElement.querySelector('.popup__title'),
@@ -73,7 +73,7 @@ const createPopup = (advert) => {
   photos.forEach((photoUrl) => {
     const photoElement = popupPhotos.querySelector('.popup__photo').cloneNode(true);
     if (photoUrl) {
-      photoElement.setAttribute('src', photoUrl);
+      photoElement.src = photoUrl;
     } else {
       photoElement.hidden = true;
     }
@@ -81,11 +81,6 @@ const createPopup = (advert) => {
   });
   const photoElements = popupPhotos.querySelectorAll('.popup__photo');
   popupPhotos.removeChild(photoElements[0]);
-  if (advert.author.avatar) {
-    popupElement.querySelector('.popup__avatar').setAttribute('src', advert.author.avatar);
-  } else {
-    popupElement.querySelector('.popup__avatar').hidded = true;
-  }
 
   return popupElement;
 };

@@ -3,18 +3,17 @@ import {createRandomAdverts} from './mock.js';
 import {createPopup} from './popup.js';
 
 const TOKIO_CENTER = {lat: 35.65856, lng: 139.85209};
+const addressElement = document.querySelector('#address');
+
+const setAddress = (lat, lng) => {
+  const address = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+  addressElement.value = address;
+};
 
 const updateAddress = (evt) => {
   const newAddress = evt.target.getLatLng();
-  const addrStr = `lat: ${newAddress.lat.toFixed(5)}, lng: ${newAddress.lng.toFixed(5)}`;
-  document.querySelector('#address').value = addrStr;
+  setAddress(newAddress.lat, newAddress.lng);
 };
-
-const setInitialAddress = () => {
-  const addrStr = `lat: ${TOKIO_CENTER.lat.toFixed(5)}, lng: ${TOKIO_CENTER.lng.toFixed(5)}`;
-  document.querySelector('#address').value = addrStr;
-};
-
 
 const drawPins = (map) => {
   const mainPinIcon = L.icon({
@@ -30,7 +29,7 @@ const drawPins = (map) => {
     },
   );
   mainPinMarker.addTo(map);
-  mainPinMarker.on('moveend', updateAddress);
+  mainPinMarker.on('move', updateAddress);
 
   const similarPinIcon = L.icon({
     iconUrl: 'img/pin.svg',
@@ -66,7 +65,7 @@ const drawMap = () => {
 const renderMap = () => {
   const map = drawMap();
   drawPins(map);
-  setInitialAddress();
+  setAddress(TOKIO_CENTER.lat, TOKIO_CENTER.lng);
 };
 
 export {renderMap};

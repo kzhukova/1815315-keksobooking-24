@@ -34,8 +34,8 @@ const capacityValidator = () => {
 const minPriceValidator = () => {
   const selectedType = typeElement.value;
   const minPrice = TYPE_TO_MIN_VALUE[selectedType];
-  priceElement.setAttribute('placeholder', minPrice);
-  priceElement.setAttribute('min', minPrice);
+  priceElement.placeholder = minPrice;
+  priceElement.min = minPrice;
 };
 
 const syncTimeInOut = () => {
