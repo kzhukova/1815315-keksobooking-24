@@ -1,5 +1,4 @@
 import {disablePage, enablePage} from './toggle-activation.js';
-import {createRandomAdverts} from './mock.js';
 import {createPopup} from './popup.js';
 
 const TOKIO_CENTER = {lat: 35.65856, lng: 139.85209};
@@ -15,7 +14,7 @@ const updateAddress = (evt) => {
   setAddress(newAddress.lat, newAddress.lng);
 };
 
-const drawPins = (map) => {
+const drawPins = (map, adverts) => {
   const mainPinIcon = L.icon({
     iconUrl: 'img/main-pin.svg',
     iconSize: [52, 52],
@@ -36,7 +35,7 @@ const drawPins = (map) => {
     iconSize: [40, 40],
     iconAnchor: [20, 40],
   });
-  createRandomAdverts().forEach((advert) => {
+  adverts.forEach((advert) => {
     const similarPinMarker = L.marker(
       advert.location,
       {icon: similarPinIcon},
@@ -62,9 +61,9 @@ const drawMap = () => {
   return map;
 };
 
-const renderMap = () => {
+const renderMap = (adverts) => {
   const map = drawMap();
-  drawPins(map);
+  drawPins(map, adverts);
   setAddress(TOKIO_CENTER.lat, TOKIO_CENTER.lng);
 };
 
