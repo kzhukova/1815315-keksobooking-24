@@ -1,3 +1,5 @@
+import { sendNewAdvert } from './api.js';
+import { resetMap } from './map.js';
 const ROOMS_TO_CAPACITY = {
   '1': ['1'],
   '2': ['1', '2'],
@@ -19,6 +21,18 @@ const typeElement = document.querySelector('#type');
 const priceElement = document.querySelector('#price');
 const timeoutElement = document.querySelector('#timeout');
 const timeinElement = document.querySelector('#timein');
+const formElement = document.querySelector('.ad-form');
+const formResetButton = document.querySelector('.ad-form__reset');
+const bodyElement = document.querySelector('body');
+const successMessageElement = document
+  .querySelector('#success')
+  .content
+  .querySelector('.success');
+
+const errorMessageElement = document
+  .querySelector('#error')
+  .content
+  .querySelector('.error');
 
 const capacityValidator = () => {
   const selectedCapacity = capacityElement.value;
@@ -51,14 +65,70 @@ const updateTimeInOut = (evt) => {
   }
 };
 
+// Пока не реализовывала механизм фильтрации поэтому
+// требование "фильтрация (состояние фильтров и отфильтрованные метки) сбрасывается;"
+// не выполняется
+const onFormReset = (evt) => {
+  evt.preventDefault();
+  formElement.reset();
+  resetMap();
+};
+
+const removeSuccessMessage = (evt) => {
+  evt.preventDefault();
+  //evt.key === undefined for mouse click case
+  if (evt.key === undefined || evt.key === 'Escape' ) {
+    document.querySelector('.success').remove();
+    document.removeEventListener('click', removeSuccessMessage);
+    document.removeEventListener('keydown', removeSuccessMessage);
+  }
+};
+
+const onFormSubmitSuccess = () => {
+  formElement.reset();
+  resetMap();
+  bodyElement.appendChild(successMessageElement);
+  document.addEventListener('click', removeSuccessMessage);
+  document.addEventListener('keydown', removeSuccessMessage);
+};
+
+const removeErrorMessage = (evt) => {
+  evt.preventDefault();
+  //evt.key === undefined for mouse click case
+  if (evt.key === undefined || evt.key === 'Escape' ) {
+    document.querySelector('.error').remove();
+    document.removeEventListener('click', removeErrorMessage);
+    document.removeEventListener('keydown', removeErrorMessage);
+  }
+};
+
+const onFormSubmitFail =  () => {
+  bodyElement.appendChild(errorMessageElement);
+  document.addEventListener('click', removeErrorMessage);
+  document.addEventListener('keydown', removeErrorMessage);
+};
+
+
+const onFormSubmit = (evt) => {
+  evt.preventDefault();
+  sendNewAdvert(
+    () => onFormSubmitSuccess(),
+    () => onFormSubmitFail(),
+    new FormData(evt.target),
+  );
+};
+
 const addListenersToForm = () => {
   capacityElement.addEventListener('change', capacityValidator);
+  roomNumberElement.addEventListener('change', capacityValidator);
   document.addEventListener('DOMContentLoaded', capacityValidator);
   typeElement.addEventListener('change', minPriceValidator);
   document.addEventListener('DOMContentLoaded', minPriceValidator);
   timeoutElement.addEventListener('change', updateTimeInOut);
   timeinElement.addEventListener('change', updateTimeInOut);
   document.addEventListener('DOMContentLoaded', syncTimeInOut);
+  formElement.addEventListener('submit', onFormSubmit);
+  formResetButton.addEventListener('click', onFormReset);
 };
 
 export {addListenersToForm};
