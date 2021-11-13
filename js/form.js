@@ -1,5 +1,7 @@
 import { sendNewAdvert } from './api.js';
 import { resetMap } from './map.js';
+import { addFilterListeners } from './filter.js';
+
 const ROOMS_TO_CAPACITY = {
   '1': ['1'],
   '2': ['1', '2'],
@@ -21,6 +23,7 @@ const typeElement = document.querySelector('#type');
 const priceElement = document.querySelector('#price');
 const timeoutElement = document.querySelector('#timeout');
 const timeinElement = document.querySelector('#timein');
+const mapFiltersForm = document.querySelector('.map__filters');
 const formElement = document.querySelector('.ad-form');
 const formResetButton = document.querySelector('.ad-form__reset');
 const bodyElement = document.querySelector('body');
@@ -28,7 +31,6 @@ const successMessageElement = document
   .querySelector('#success')
   .content
   .querySelector('.success');
-
 const errorMessageElement = document
   .querySelector('#error')
   .content
@@ -64,12 +66,9 @@ const updateTimeInOut = (evt) => {
     timeinElement.value = evt.target.value;
   }
 };
-
-// Пока не реализовывала механизм фильтрации поэтому
-// требование "фильтрация (состояние фильтров и отфильтрованные метки) сбрасывается;"
-// не выполняется
 const onFormReset = (evt) => {
   evt.preventDefault();
+  mapFiltersForm.reset();
   formElement.reset();
   resetMap();
 };
@@ -86,6 +85,7 @@ const removeSuccessMessage = (evt) => {
 
 const onFormSubmitSuccess = () => {
   formElement.reset();
+  mapFiltersForm.reset();
   resetMap();
   bodyElement.appendChild(successMessageElement);
   document.addEventListener('click', removeSuccessMessage);
@@ -129,6 +129,7 @@ const addListenersToForm = () => {
   document.addEventListener('DOMContentLoaded', syncTimeInOut);
   formElement.addEventListener('submit', onFormSubmit);
   formResetButton.addEventListener('click', onFormReset);
+  addFilterListeners();
 };
 
 export {addListenersToForm};

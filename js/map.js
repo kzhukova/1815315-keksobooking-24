@@ -1,10 +1,13 @@
 import {disablePage, enablePage} from './toggle-activation.js';
 import {fetchAdverts} from './api.js';
 import {createPopup} from './popup.js';
+import { compliesWithFilter } from './filter.js';
 
-const TOKIO_CENTER = {lat: 35.65856, lng: 139.85209};
+const TOKIO_CENTER = {lat: 35.68477, lng: 139.74323};
 
 const addressElement = document.querySelector('#address');
+
+const drawnSimilarPins = [];
 
 const MAIN_PIN_MARKER = L.marker(
   TOKIO_CENTER,
@@ -30,10 +33,12 @@ const updateAddress = (evt) => {
   setAddress(newAddress.lat, newAddress.lng);
 };
 
-const drawPins = () => {
+const drawMainPin = () => {
   MAIN_PIN_MARKER.addTo(MAP);
   MAIN_PIN_MARKER.on('move', updateAddress);
+};
 
+const drawSimilarPins = () => {
   const similarPinIcon = L.icon({
     iconUrl: 'img/pin.svg',
     iconSize: [40, 40],
@@ -42,7 +47,10 @@ const drawPins = () => {
 
   fetchAdverts()
     .then((adverts) => {
-      adverts.forEach((advert) => {
+      const filteredAdverts = adverts
+        .filter((advert) => compliesWithFilter(advert))
+        .slice(0, 10);
+      filteredAdverts.forEach((advert) => {
         const similarPinMarker = L.marker(
           advert.location,
           {icon: similarPinIcon},
@@ -50,9 +58,16 @@ const drawPins = () => {
         similarPinMarker
           .addTo(MAP)
           .bindPopup(createPopup(advert));
+        drawnSimilarPins.push(similarPinMarker);
       });
     })
     .catch((error) => alert(`Не удалось получить данные от сервера: ${error}`)); //eslint-disable-line
+};
+
+const deleteSimilarPins = () => {
+  while (drawnSimilarPins.length > 0) {
+    MAP.removeLayer(drawnSimilarPins.pop());
+  }
 };
 
 const drawMap = () => {
@@ -71,7 +86,8 @@ const drawMap = () => {
 
 const renderMap = () => {
   drawMap();
-  drawPins();
+  drawMainPin();
+  drawSimilarPins();
   setAddress(TOKIO_CENTER.lat, TOKIO_CENTER.lng);
 };
 
@@ -81,6 +97,9 @@ const resetMap = () => {
   setAddress(TOKIO_CENTER.lat, TOKIO_CENTER.lng);
   const LatLng = new L.LatLng(TOKIO_CENTER.lat, TOKIO_CENTER.lng);
   MAIN_PIN_MARKER.setLatLng(LatLng);
+  deleteSimilarPins();
+  drawSimilarPins();
 };
 
-export {renderMap, resetMap};
+
+export {renderMap, resetMap, deleteSimilarPins, drawSimilarPins};
