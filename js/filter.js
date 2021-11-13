@@ -12,7 +12,9 @@ const housingFeaturesElements = document.querySelectorAll('input[name="features"
 
 const compliesWithHosingType = (advert) => {
   const advertType = advert.offer.type;
-  if (!advertType) {return false;}
+  if (!advertType) {
+    return false;
+  }
   if (housingTypeElement.value === 'any') {
     return true;
   }
@@ -21,7 +23,9 @@ const compliesWithHosingType = (advert) => {
 
 const compliesWithHosingPrice = (advert) => {
   const advertPrice = advert.offer.price;
-  if (!advertPrice) { return false;}
+  if (!advertPrice) {
+    return false;
+  }
   if (housingPriceElement.value === 'any') {
     return true;
   }
@@ -37,7 +41,9 @@ const compliesWithHosingPrice = (advert) => {
 
 const compliesWithHousingRooms = (advert) => {
   const advertRooms = advert.offer.rooms;
-  if (!advertRooms) { return false;}
+  if (!advertRooms) {
+    return false;
+  }
   if (housingRoomsElement.value === 'any') {
     return true;
   }
@@ -46,7 +52,8 @@ const compliesWithHousingRooms = (advert) => {
 
 const compliesWithHousingGuests = (advert) => {
   const advertGuests = advert.offer.guests;
-  if (!advertGuests) {return advertGuests;}
+  if (!advertGuests) {
+    return false;}
   if (housingGuestsElement.value === 'any') {
     return true;
   }
@@ -55,7 +62,9 @@ const compliesWithHousingGuests = (advert) => {
 
 const compliesWithHousingFeatures = (advert) => {
   const advertFeatures = advert.offer.features;
-  if (!advertFeatures) { return false;}
+  if (!advertFeatures) {
+    return false;
+  }
   const checkedFeatureNames = Array.from(housingFeaturesElements)
     .filter((feature) => feature.checked === true)
     .map((feature) => feature.value);
@@ -66,22 +75,12 @@ const compliesWithHousingFeatures = (advert) => {
 };
 
 const compliesWithFilter = (advert) => {
-  if (!compliesWithHosingType(advert)) {
-    return false;
-  }
-  if (!compliesWithHosingPrice(advert)) {
-    return false;
-  }
-  if (!compliesWithHousingRooms(advert)) {
-    return false;
-  }
-  if (!compliesWithHousingGuests(advert)) {
-    return false;
-  }
-  if (!compliesWithHousingFeatures(advert)) {
-    return false;
-  }
-  return true;
+  const isAdvertComplies = compliesWithHosingType(advert) &&
+    compliesWithHosingPrice(advert) &&
+    compliesWithHousingRooms(advert) &&
+    compliesWithHousingGuests(advert) &&
+    compliesWithHousingFeatures(advert);
+  return isAdvertComplies;
 };
 
 const onFilterChange = () => {
