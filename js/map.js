@@ -47,9 +47,11 @@ const drawSimilarPins = () => {
 
   fetchAdverts()
     .then((adverts) => {
-      const filteredAdverts = adverts
-        .filter((advert) => compliesWithFilter(advert))
-        .slice(0, 10);
+      let filteredAdverts = adverts
+        .filter((advert) => compliesWithFilter(advert));
+      if (filteredAdverts.length > 10) {
+        filteredAdverts = filteredAdverts.slice(0,10);
+      }
       filteredAdverts.forEach((advert) => {
         const similarPinMarker = L.marker(
           advert.location,

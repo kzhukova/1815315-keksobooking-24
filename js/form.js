@@ -35,6 +35,11 @@ const errorMessageElement = document
   .querySelector('#error')
   .content
   .querySelector('.error');
+const avatarPhotoContainer = document.querySelector('.ad-form-header__preview');
+const defaultAvatar = avatarPhotoContainer.children[0].cloneNode(true);
+const avatarPhotoUploadInput = document.querySelector('#avatar');
+const advertPhotoContainer = document.querySelector('.ad-form__photo');
+const advertPhotoUploadInput = document.querySelector('#images');
 
 const capacityValidator = () => {
   const selectedCapacity = capacityElement.value;
@@ -66,11 +71,18 @@ const updateTimeInOut = (evt) => {
     timeinElement.value = evt.target.value;
   }
 };
+
 const onFormReset = (evt) => {
   evt.preventDefault();
   mapFiltersForm.reset();
   formElement.reset();
   resetMap();
+  if (avatarPhotoContainer.children[0].src !== defaultAvatar.src) {
+    avatarPhotoContainer.replaceChild(defaultAvatar, avatarPhotoContainer.children[0]);
+  }
+  if(advertPhotoContainer.hasChildNodes()) {
+    advertPhotoContainer.removeChild(advertPhotoContainer.firstChild);
+  }
 };
 
 const removeSuccessMessage = (evt) => {
@@ -90,6 +102,12 @@ const onFormSubmitSuccess = () => {
   bodyElement.appendChild(successMessageElement);
   document.addEventListener('click', removeSuccessMessage);
   document.addEventListener('keydown', removeSuccessMessage);
+  if (avatarPhotoContainer.children[0].src !== defaultAvatar.src) {
+    avatarPhotoContainer.replaceChild(defaultAvatar, avatarPhotoContainer.children[0]);
+  }
+  if(advertPhotoContainer.hasChildNodes()) {
+    advertPhotoContainer.removeChild(advertPhotoContainer.firstChild);
+  }
 };
 
 const removeErrorMessage = (evt) => {
@@ -118,18 +136,50 @@ const onFormSubmit = (evt) => {
   );
 };
 
+const onAvatarPhotoLoad = () => {
+  const loadedPhoto = avatarPhotoUploadInput.files[0];
+  if (loadedPhoto) {
+    const imageElement = defaultAvatar.cloneNode(true);
+    imageElement.src = URL.createObjectURL(loadedPhoto);
+    avatarPhotoContainer.replaceChild(imageElement, avatarPhotoContainer.children[0]);
+  }
+};
+
+const onAdvertPhotoLoad = () => {
+  const loadedPhoto = advertPhotoUploadInput.files[0];
+  if (loadedPhoto) {
+    const imageElement = document.createElement('img');
+    imageElement.src = URL.createObjectURL(loadedPhoto);
+    imageElement.alt = 'Advert photo';
+    imageElement.className = 'ad-form__photo';
+
+    if(advertPhotoContainer.hasChildNodes()) {
+      advertPhotoContainer.replaceChild(imageElement, advertPhotoContainer.children[0]);
+    } else {
+      advertPhotoContainer.appendChild(imageElement);
+    }
+  }
+};
+
+const onPageLoad = () => {
+  capacityValidator();
+  minPriceValidator();
+  syncTimeInOut();
+};
+
 const addListenersToForm = () => {
+  document.addEventListener('DOMContentLoaded', onPageLoad);
   capacityElement.addEventListener('change', capacityValidator);
   roomNumberElement.addEventListener('change', capacityValidator);
-  document.addEventListener('DOMContentLoaded', capacityValidator);
   typeElement.addEventListener('change', minPriceValidator);
-  document.addEventListener('DOMContentLoaded', minPriceValidator);
   timeoutElement.addEventListener('change', updateTimeInOut);
   timeinElement.addEventListener('change', updateTimeInOut);
-  document.addEventListener('DOMContentLoaded', syncTimeInOut);
   formElement.addEventListener('submit', onFormSubmit);
   formResetButton.addEventListener('click', onFormReset);
+  avatarPhotoUploadInput.addEventListener('change', onAvatarPhotoLoad);
+  advertPhotoUploadInput.addEventListener('change', onAdvertPhotoLoad);
   addFilterListeners();
+
 };
 
 export {addListenersToForm};
